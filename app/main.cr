@@ -8,6 +8,9 @@ class Commands
 
   def initialize(@client : TCPSocket) end
 
+  def ping
+    client << "+PONG\r\n";
+  end
 end
 
 class YourRedisServer
@@ -30,6 +33,7 @@ class YourRedisServer
     client = server.accept?;
     cmd = generate_commands_from client;
 
+    cmd.ping;
   end
 end
 
