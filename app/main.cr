@@ -11,7 +11,11 @@ class YourRedisServer
     client = server.accept!;
     cmd = Commands.new client;
 
-    cmd.ping;
+    while message = client.gets
+      if message == "ping"
+        cmd.ping;
+      end
+    end
   end
 end
 
