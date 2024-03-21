@@ -1,37 +1,9 @@
 require "socket";
+require "./extensions/TCPServer+accept!";
+require "./Commands";
 
 # Ensure that the program terminates on SIGTERM, https://github.com/crystal-lang/crystal/issues/8687
 Signal::TERM.trap { exit; };
-
-class Object
-  def safe!
-    begin
-      self.not_nil!;
-    rescue NilAssertionError
-      exit;
-    end
-  end
-end
-
-class TCPServer
-  def accept!
-    begin
-      self.accept?.not_nil!;
-    rescue NilAssertionError
-      exit;
-    end
-  end
-end
-
-class Commands
-  getter :client;
-
-  def initialize(@client : TCPSocket) end
-
-  def ping
-    client << "+PONG\r\n";
-  end
-end
 
 class YourRedisServer
   def start
