@@ -1,11 +1,5 @@
-require "socket";
-
-class Commands
-  getter :client;
-
-  def initialize(@client : TCPSocket) end
-
+module Commands
   def ping
-    client << "+PONG\r\n";
+    self << "+PONG\r\n";
   end
 end
