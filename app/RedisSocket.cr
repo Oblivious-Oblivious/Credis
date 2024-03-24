@@ -6,9 +6,11 @@ class RedisSocket < TCPSocket
 
   def send(cmd_builder, cmds)
     cmds.each do |cmd|
-      if cmd[0] == "ping"
+      operation = cmd[0].downcase;
+
+      if operation == "ping"
         self.ping;
-      elsif cmd[0] == "echo"
+      elsif operation == "echo"
         self.echo cmd[1];
       end
     end
