@@ -1,6 +1,3 @@
-alias RedisValue = String | Int32 | Nil
-alias RedisObject = RedisValue | Array(RedisObject)
-
 class RedisProtocolParser
   def initialize(@data : String)
     @index = 0;
@@ -29,34 +26,38 @@ class RedisProtocolParser
   end
 
   private def decode_integer
-    read_line.to_i;
+    read_line.to_i.to_s;
   end
 
   private def decode_nil
-    nil;
+    "";
+  end
+
+  private def decode_nil_array
+    [""];
   end
 
   private def decode_bulk_string
-    length = read_line.to_i;
-    if length == -1
-      nil;
-    else
+    begin
+      length = read_line.to_i;
       start = @index;
       @index += length + 2; # Skip the bulk string and trailing \r\n
       @data[start...start + length];
+    rescue ex : Exception
+      decode_nil;
     end
   end
 
   private def decode_array
-    length = read_line.to_i;
-    if length == -1
-      nil
-    else
-      Array.new(length) { decode; };
+    begin
+      length = read_line.to_i;
+      Array.new(length.to_i) { decode_without_array; };
+    rescue ex : Exception
+      decode_nil_array;
     end
   end
 
-  def decode : RedisObject
+  private def decode_without_array
     case current_char
     when '+'
       decode_simple_string;
@@ -66,21 +67,32 @@ class RedisProtocolParser
       decode_integer;
     when '$'
       decode_bulk_string;
-    when '*'
-      decode_array;
     else
       decode_nil;
     end
   end
 
-  def decode_stream
-    response_objects = [] of RedisObject;
+  private def decode
+    case current_char;
+    when '*'
+      decode_array;
+    else
+      decode_nil_array;
+    end
+  end
 
-    while command = decode
+  def decode_stream
+    response_objects = [] of Array(String);
+
+    while (command = decode) != [""]
       response_objects << command;
     end
 
     @index = 0;
-    response_objects;
+    if response_objects.empty? || response_objects[0].includes? ""
+      [[""]];
+    else
+      response_objects;
+    end
   end
 end
