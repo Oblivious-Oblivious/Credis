@@ -1,3 +1,5 @@
+require "./RedisStore";
+
 module Commands
   def ping
     self << "+PONG\r\n";
@@ -5,5 +7,19 @@ module Commands
 
   def echo(message)
     self << "+#{message}\r\n";
+  end
+
+  def set(key, value)
+    RedisStore.shared.set(key, value);
+    self << "+OK\r\n";
+  end
+
+  def get(key)
+    if RedisStore.shared.include?(key)
+      value = RedisStore.shared.get(key);
+      self << "$#{value.size}\r\n#{value}\r\n";
+    else
+      self << "$-1\r\n";
+    end
   end
 end
