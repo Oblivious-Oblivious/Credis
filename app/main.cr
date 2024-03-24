@@ -1,6 +1,4 @@
-require "./extensions/Object+safe!";
-require "./extensions/RedisServer+accept";
-
+require "./extensions/_all";
 require "./RedisServer";
 
 # Ensure that the program terminates on SIGTERM, https://github.com/crystal-lang/crystal/issues/8687
