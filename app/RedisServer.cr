@@ -1,7 +1,16 @@
+require "socket";
+require "./RedisProtocolParser";
+
 class RedisServer < TCPServer
   private def handle_request(redis_client)
-    while message = redis_client.gets
-      redis_client.send message;
+    cmd_builder = "";
+    while data = redis_client.gets
+      cmd_builder += data + "\r\n";
+      cmds = RedisProtocolParser.new(cmd_builder).decode_stream;
+      if !cmds.empty? && !cmds[0].includes?(nil) && !cmds[0].includes?("")
+        redis_client.send cmd_builder, cmds;
+        cmd_builder = "";
+      end
     end
   end
 
