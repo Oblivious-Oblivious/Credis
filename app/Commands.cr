@@ -14,6 +14,11 @@ module Commands
     self << "+OK\r\n";
   end
 
+  def set(key, value, timeout)
+    RedisStore.shared.set_with_expiration(key, value, timeout);
+    self << "+OK\r\n";
+  end
+
   def get(key)
     if RedisStore.shared.include?(key)
       value = RedisStore.shared.get(key);
