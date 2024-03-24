@@ -12,8 +12,12 @@ class RedisSocket < TCPSocket
         self.ping;
       elsif operation == "echo"
         self.echo cmd[1];
+      elsif operation == "info"
+        if cmd[1].downcase == "replication"
+          self.info_replication;
+        end
       elsif operation == "set"
-        if cmd.size == 5 && cmd[3] == "px"
+        if cmd.size == 5 && cmd[3].downcase == "px"
           self.set cmd[1], cmd[2], cmd[4].to_i;
         else
           self.set cmd[1], cmd[2];

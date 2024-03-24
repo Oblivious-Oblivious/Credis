@@ -9,6 +9,10 @@ module Commands
     self << "+#{message}\r\n";
   end
 
+  def info_replication
+    self << "$11\r\nrole:master\r\n";
+  end
+
   def set(key, value)
     RedisStore.shared.set(key, value);
     self << "+OK\r\n";
