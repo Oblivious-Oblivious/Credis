@@ -24,8 +24,18 @@ class RedisServer < TCPServer
     end
   end
 
+  private def send_psync(master_socket)
+    repl_id = "?";
+    repl_offset = "-1";
+    master_socket << encode_array ["psync", repl_id, repl_offset];
+  end
+
   private def send_replconf_capa_psync2(master_socket)
     master_socket << encode_array ["replconf", "capa", "psync2"];
+    master_socket.flush;
+    if master_socket.gets == encode_simple_string("OK").chomp
+      send_psync master_socket;
+    end
   end
 
   private def send_replconf_port(master_socket)
