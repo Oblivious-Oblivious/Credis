@@ -11,7 +11,10 @@ module Commands
 
   def info_replication
     host = Redis::ARGS[:host_type];
-    self << "$#{5+host.size}\r\nrole:#{host}\r\n";
+    master_replid = "8371b4fb1155b71f4a04d3e1bc3e18c4a990aeeb";
+    master_repl_offset = "0";
+
+    self << encode_bulk_string "role:#{host}\r\nmaster_replid:#{master_replid}\r\nmaster_repl_offset:#{master_repl_offset}";
   end
 
   def set(key, value)
