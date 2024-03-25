@@ -10,7 +10,8 @@ module Commands
   end
 
   def info_replication
-    self << "$11\r\nrole:master\r\n";
+    host = Redis::ARGS[:host_type];
+    self << "$#{5+host.size}\r\nrole:#{host}\r\n";
   end
 
   def set(key, value)
