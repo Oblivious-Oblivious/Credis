@@ -17,6 +17,10 @@ module Commands
     self << encode_bulk_string "role:#{host}\r\nmaster_replid:#{master_replid}\r\nmaster_repl_offset:#{master_repl_offset}";
   end
 
+  def replconf(args)
+    self << encode_simple_string "OK";
+  end
+
   def set(key, value)
     RedisStore.shared.set(key, value);
     self << encode_simple_string "OK";
