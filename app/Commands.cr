@@ -10,8 +10,9 @@ module Commands
   end
 
   def info_replication
-    master_replid = "8371b4fb1155b71f4a04d3e1bc3e18c4a990aeeb";
-    master_repl_offset = "0";
+    host = Redis::VALUES[:host_type];
+    master_replid = Redis::VALUES[:repl_id];
+    master_repl_offset = Redis::VALUES[:repl_offset];
 
     self << encode_bulk_string "role:#{host}\r\nmaster_replid:#{master_replid}\r\nmaster_repl_offset:#{master_repl_offset}";
   end
