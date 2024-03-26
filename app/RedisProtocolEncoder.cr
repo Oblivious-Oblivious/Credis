@@ -15,6 +15,10 @@ module RedisProtocolEncoder
     "$#{value.bytesize}\r\n#{value}\r\n";
   end
 
+  def encode_file(value)
+    "$#{value.bytesize}\r\n#{value}";
+  end
+
   def encode_nil
     "$-1\r\n";
   end

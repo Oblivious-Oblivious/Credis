@@ -26,6 +26,7 @@ module Commands
     offset = Redis::VALUES[:repl_offset];
 
     self << encode_simple_string "FULLRESYNC #{id} #{offset}";
+    self << encode_file Redis.create_and_delete_empty_rdb;
   end
 
   def set(key, value)
