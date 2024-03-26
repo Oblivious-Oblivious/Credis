@@ -21,6 +21,13 @@ module Commands
     self << encode_simple_string "OK";
   end
 
+  def psync(id, offset)
+    id = Redis::VALUES[:repl_id];
+    offset = Redis::VALUES[:repl_offset];
+
+    self << encode_simple_string "FULLRESYNC #{id} #{offset}";
+  end
+
   def set(key, value)
     RedisStore.shared.set(key, value);
     self << encode_simple_string "OK";
