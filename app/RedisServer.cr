@@ -39,7 +39,7 @@ class RedisServer < TCPServer
   end
 
   private def send_replconf_port(master_socket)
-    port = Redis::ARGS[:port];
+    port = Redis::VALUES[:port];
     master_socket << encode_array ["replconf", "listening-port", port];
     master_socket.flush;
     if master_socket.gets == encode_simple_string("OK").chomp
@@ -56,8 +56,8 @@ class RedisServer < TCPServer
   end
 
   private def connect_and_send_handshake_to_master
-    host = Redis::ARGS[:master_host];
-    port = Redis::ARGS[:master_port].to_i;
+    host = Redis::VALUES[:master_host];
+    port = Redis::VALUES[:master_port].to_i;
     master_socket = RedisSocket.new host, port;
     send_ping master_socket;
     master_socket.close;
@@ -66,7 +66,7 @@ class RedisServer < TCPServer
   def initialize(host, port)
     super host, port;
 
-    if Redis::ARGS[:host_type] == "slave";
+    if Redis::VALUES[:host_type] == "slave";
       connect_and_send_handshake_to_master;
     end
   end

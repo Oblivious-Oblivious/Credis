@@ -1,5 +1,5 @@
 module Redis
-  ARGS = {
+  VALUES = {
     :port => "6379",
     :master_host => "0.0.0.0",
     :master_port => "6380",

@@ -6,13 +6,13 @@ require "./RedisServer";
 Signal::TERM.trap { exit; };
 
 if portindex = ARGV.index("--port").to_safe
-  Redis::ARGS[:port] = ARGV[portindex + 1];
+  Redis::VALUES[:port] = ARGV[portindex + 1];
 end
 
 if replicaofindex = ARGV.index("--replicaof").to_safe
-  Redis::ARGS[:master_host] = ARGV[replicaofindex + 1];
-  Redis::ARGS[:host_type] = "slave";
-  Redis::ARGS[:master_port] = ARGV[replicaofindex + 2];
+  Redis::VALUES[:master_host] = ARGV[replicaofindex + 1];
+  Redis::VALUES[:host_type] = "slave";
+  Redis::VALUES[:master_port] = ARGV[replicaofindex + 2];
 end
 
-(RedisServer.new Redis::ARGS[:master_host], Redis::ARGS[:port].to_i).start;
+(RedisServer.new Redis::VALUES[:master_host], Redis::VALUES[:port].to_i).start;
