@@ -1,9 +1,7 @@
 require "socket";
-require "./RedisProtocolEncoder";
 require "./Commands";
 
 class RedisSocket < TCPSocket
-  include RedisProtocolEncoder;
   include Commands;
 
   def receive(cmds)

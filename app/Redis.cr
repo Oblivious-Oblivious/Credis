@@ -1,3 +1,5 @@
+require "./RedisSocket";
+
 module Redis
   VALUES = {
     :port => "6379",
@@ -8,6 +10,8 @@ module Redis
     :repl_id => "8371b4fb1155b71f4a04d3e1bc3e18c4a990aeeb",
     :repl_offset => "0",
   };
+
+  REPLICAS = [] of RedisSocket;
 
   VERSION = "0.0.1";
 
