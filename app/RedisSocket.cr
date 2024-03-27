@@ -6,7 +6,7 @@ class RedisSocket < TCPSocket
   include RedisProtocolEncoder;
   include Commands;
 
-  def send(cmd_builder, cmds)
+  def receive(cmds)
     cmds.each do |cmd|
       operation = cmd[0].downcase;
 

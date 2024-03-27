@@ -10,7 +10,7 @@ class RedisServer < TCPServer
       cmd_builder += data + "\r\n";
       cmds = RedisProtocolParser.new(cmd_builder).decode_stream;
       if cmds != [[""]]
-        redis_client.send cmd_builder, cmds;
+        redis_client.receive cmds;
         cmd_builder = "";
       end
     end
