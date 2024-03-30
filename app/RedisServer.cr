@@ -1,18 +1,14 @@
 require "socket";
-require "./RedisProtocolParser";
+require "./RedisProtocolDecoder";
+require "./RedisProtocolEncoder";
 
 class RedisServer < TCPServer
   include RedisProtocolEncoder;
 
   private def handle_request(redis_client)
-    cmd_builder = "";
-    while data = redis_client.gets
-      cmd_builder += data + "\r\n";
-      cmds = RedisProtocolParser.new(cmd_builder).decode_stream;
-      if cmds != [[""]]
-        redis_client.receive cmds;
-        cmd_builder = "";
-      end
+    decoder = RedisProtocolDecoder.new redis_client;
+    while (cmd = decoder.decode) != [""]
+      redis_client.receive cmd;
     end
   end
 
@@ -60,7 +56,6 @@ class RedisServer < TCPServer
     port = Redis::VALUES[:master_port].to_i;
     master_socket = RedisSocket.new host, port;
     send_ping master_socket;
-    master_socket.close;
   end
 
   def initialize(host, port)
